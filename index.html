@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de Commande</title>
+    <style>
+    .hidden {
+    display: none;
+}
+
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f4f4f4; }
+        .category { background-color: #ddd; font-weight: bold; text-align: left; }
+        input, textarea, button { width: 100%; padding: 10px; margin: 5px 0; font-size: 16px; }
+        .subtitle { font-size: 18px; font-style: italic; color: #0077b6; margin-bottom: 20px; }
+        
+        @media (max-width: 600px) {
+            body {
+                margin: 10px;
+            }
+            table {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 6px;
+            }
+            input, textarea, button {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>Huitre Occitane</h2>
+    <p class="subtitle">Les saveurs marines à domicile</p>
+    
+    <label for="info-message">Informations :</label>
+    <textarea id="info-message" rows="4" cols="50" disabled>
+Veuillez remplir ce formulaire pour passer votre commande. Les poids des produits peuvent légèrement varier lors de la préparation. Nous vous contacterons pour confirmation.
+    </textarea>
+    
+    <label for="customer-name">Nom :</label>
+    <input type="text" id="customer-name" placeholder="Votre nom" required>
+    
+    <label for="customer-phone">Téléphone :</label>
+    <input type="tel" id="customer-phone" placeholder="Votre numéro de téléphone" required>
+    
+    <h3>Produits vendus au kilo</h3>
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix au kg (€)</th>
+                    <th>Quantité (kg)</th>
+                    <th>Total (€)</th>
+                </tr>
+            </thead>
+            <tbody id="product-list">
+                <tr class="category">
+                    <td colspan="4">Poissons Atlantique</td>
+                </tr>
+                <tr data-id="saumon entier">
+                    <td>Saumon en filet entier environ 1.5kg, desarrété et dégraissé(26.00€/kg</td>
+                    <td class="price">39.00</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                 <tr data-id="saumon detail">
+                    <td>Saumon en filet au detail, desarrété et dégraissé</td>
+                    <td class="price">29.80</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr data-id="cabillaud">
+                    <td>Cabillaud en filet environ 400g</td>
+                    <td class="price">28.50</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr data-id="lieu">
+                    <td>Lieu noir en filet environ 300g</td>
+                    <td class="price">21.50</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr data-id="eglefin">
+                    <td>Eglefin en filet environ 200g</td>
+                    <td class="price">25.60</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr data-id="lotte">
+                    <td>Queue de lotte environ 400g</td>
+                    <td class="price">27.80</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr data-id="raie">
+                    <td>Aile de raie environ 400g</td>
+                    <td class="price">22.50</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr class="category">
+                    <td colspan="4">Poissons Méditerranée</td>
+                </tr>
+                <tr data-id="daurade">
+                    <td>Daurade royale sauvage environ 250g</td>
+                    <td class="price">22.80</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr data-id="loup">
+                    <td>Loup sauvage environ 300g</td>
+                    <td class="price">28.00</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr data-id="encornet">
+                    <td>Encornets rouges environ 100/150g</td>
+                    <td class="price">17.60</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr class="category">
+                    <td colspan="4">Moules de Sete</td>
+                </tr>
+                <tr>
+                    <td>Moules petites</td>
+                    <td class="price">4.90</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                 <tr>
+                    <td>Moules petites lot de 3kg</td>
+                    <td class="price">12.00</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                 <tr>
+                    <td>Moules grosses</td>
+                    <td class="price">5.50</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr>
+                    <td>Moules grosses lot de 3kg</td>
+                    <td class="price">14.00</td>
+                    <td><input type="number" class="quantity" min="0" step="0.1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr class="category">
+                    <td colspan="4">Fruits de mer</td>
+                </tr>
+                <tr>
+                    <td>Crevettes cuites (environ 30/kg)</td>
+                    <td class="price">22.00</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h3>Produits vendus à l'unité</h3>
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix à l'unité (€)</th>
+                    <th>Quantité</th>
+                    <th>Total (€)</th>
+                </tr>
+            </thead>
+            <tbody id="unit-product-list">
+                <tr class="category">
+                    <td colspan="4">Huitres(notre production)</td>
+                </tr>
+                <tr data-id="Huître Excellence (prix par dz)">
+                    <td>Huître Excellence (prix par dz)</td>
+                    <td class="price">22.00</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr>
+                    <td>Huître n°2 (prix par dz)</td>
+                    <td class="price">10.80</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr>
+                    <td>Huître n°3 (prix par dz)</td>
+                    <td class="price">9.70</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr>
+                    <td>Huître n°4 (prix par dz)</td>
+                    <td class="price">8.40</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                
+                <tr class="category">
+                    <td colspan="4">Conserves artisanales Azaiz et Polito</td>
+                </tr>
+                <tr>
+                    <td>Encornets farcis (bocal 4/5 pieces)</td>
+                    <td class="price">15.00</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr>
+                    <td>Soupe de poisson de roche (bocal 4 personnes)</td>
+                    <td class="price">15.00</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr>
+                    <td>Brandade de morue (210ml)</td>
+                    <td class="price">6.50</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr class="category">
+                    <td colspan="4">Vin blanc</td>
+                </tr>
+                 <tr>
+                    <td>Picpoul Pinet carte noire (72cl)</td>
+                    <td class="price">7.80</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+                <tr>
+                    <td>Picpoul Pinet carte noire (72cl par carton de 6)</td>
+                    <td class="price">40.00</td>
+                    <td><input type="number" class="quantity" min="0" step="1" oninput="calculateTotal()"></td>
+                    <td class="total">0.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Total estimatif: <span id="grand-total">0.00</span> €</h3>
+
+    <script>
+        function calculateTotal() {
+            let grandTotal = 0;
+            document.querySelectorAll("#product-list tr:not(.category), #unit-product-list tr:not(.category)").forEach(row => {
+                let price = parseFloat(row.querySelector(".price").textContent.replace(',', '.'));
+                let quantity = parseFloat(row.querySelector(".quantity").value) || 0;
+                let total = price * quantity;
+                row.querySelector(".total").textContent = total.toFixed(2).replace('.', ',');
+                grandTotal += total;
+            });
+            document.getElementById("grand-total").textContent = grandTotal.toFixed(2).replace('.', ',');
+        }
+    </script>
+
+    <button onclick="sendOrder()">Passer la commande</button>
+
+    <script>
+        function sendOrder() {
+    let name = document.getElementById("customer-name").value.trim();
+    let phone = document.getElementById("customer-phone").value.trim();
+    let orderDetails = "Commande de : " + name + "%0D%0A";
+    orderDetails += "Téléphone : " + phone + "%0D%0A%0D%0A";
+
+    let grandTotal = 0;
+
+    // Produits au kilo
+    orderDetails += "🛒 Produits vendus au kilo : %0D%0A";
+    document.querySelectorAll("#product-list tr:not(.category)").forEach(row => {
+        let product = row.cells[0].textContent.trim();
+        let price = row.cells[1].textContent.trim();
+        let quantity = row.cells[2].querySelector("input").value;
+        let total = row.cells[3].textContent.trim();
+
+        if (quantity > 0) {
+            orderDetails += `${product} - ${quantity} kg à ${price} €/kg = ${total} €%0D%0A`;
+            grandTotal += parseFloat(total.replace(',', '.'));
+        }
+    });
+
+    // Produits à l'unité
+    orderDetails += "%0D%0A🛍️ Produits vendus à l'unité : %0D%0A";
+    document.querySelectorAll("#unit-product-list tr:not(.category)").forEach(row => {
+        let product = row.cells[0].textContent.trim();
+        let price = row.cells[1].textContent.trim();
+        let quantity = row.cells[2].querySelector("input").value;
+        let total = row.cells[3].textContent.trim();
+
+        if (quantity > 0) {
+            orderDetails += `${product} - ${quantity} unités à ${price} €/unité = ${total} €%0D%0A`;
+            grandTotal += parseFloat(total.replace(',', '.'));
+        }
+    });
+
+    // Ajout du total estimatif
+    orderDetails += "%0D%0A💰 Montant total estimatif : " + grandTotal.toFixed(2).replace('.', ',') + " €";
+            let recipient = "huitroccitane@gmail.com"; // Remplace par ton email
+            let subject = "Nouvelle commande - " + name;
+            let mailtoLink = `mailto:${recipient}?subject=${subject}&body=${orderDetails}`;
+
+            window.location.href = mailtoLink;
+             
+              document.querySelectorAll(".quantity, .unit-quantity").forEach(input => input.value = "");
+    calculateTotal();
+        }
+    </script>
+    <script>
+    function toggleProduct(productId) {
+        let row = document.querySelector(`tr[data-id="${productId}"]`);
+        if (row) {
+            row.classList.toggle("hidden");
+        }
+    }
+
+    function showAdminControls() {
+        let adminPanel = document.getElementById("admin-controls");
+        adminPanel.style.display = "block"; 
+    }
+</script>
+<script>
+    function hideAdminControls() {
+        let adminPanel = document.getElementById("admin-controls");
+        adminPanel.style.display = "none";
+    }
+</script>
+
+
+</body>
+</html>
+
+<div id="admin-controls" style="display: none;">
+    <h3>⚙️ Administration</h3>
+    <button onclick="toggleProduct('saumon entier')">Saumon entier</button>
+    <button onclick="toggleProduct('saumon detail')">Saumon detail</button>
+    <button onclick="toggleProduct('cabillaud')"> Cabillaud</button>
+    <button onclick="toggleProduct('eglefin')"> Eglefin</button>
+    <button onclick="toggleProduct('lieu')"> Lieu</button>
+    <button onclick="toggleProduct('lotte')"> Lotte</button>
+    <button onclick="toggleProduct('raie')"> Raie</button>
+    <button onclick="toggleProduct('daurade')"> Daurade</button>
+    <button onclick="toggleProduct('encornet')"> Encornet</button>
+    
+    <button onclick="toggleProduct('Huître Excellence (prix par dz)')"> Huître Excellence</button>
+    <button onclick="hideAdminControls()">Fermer</button>
+
+</div>
+<input type="password" id="admin-code" placeholder="Code admin">
+<button onclick="checkAdmin()">Valider</button>
+
+<script>
+    function checkAdmin() {
+        let code = document.getElementById("admin-code").value;
+        if (code === "6666") { // Remplace "1234" par un vrai mot de passe secret
+            showAdminControls();
+        } else {
+            alert("Code incorrect !");
+        }
+    }
+</script>
+  
