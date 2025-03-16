@@ -283,7 +283,7 @@ Veuillez remplir ce formulaire pour passer votre commande. Les poids des produit
         let total = row.cells[3].textContent.trim();
 
         if (quantity > 0) {
-            orderDetails += `${product} - ${quantity} kg à ${price} €/kg = ${total} €%0D%0A`;
+            orderDetails += `${product} - ${quantity} kg à ${price} €/kg = ${total} €\n`;
             grandTotal += parseFloat(total.replace(',', '.'));
         }
     });
