@@ -283,7 +283,7 @@ Veuillez remplir ce formulaire pour passer votre commande. Les poids des produit
         let total = row.cells[3].textContent.trim();
 
         if (quantity > 0) {
-            orderDetails += `${product} - ${quantity} kg à ${price} €/kg = ${total} €\n`;
+            orderDetails += `${product} - ${quantity} kg à ${price} €/kg = ${total} €%0D%0A`;
             grandTotal += parseFloat(total.replace(',', '.'));
         }
     });
@@ -306,7 +306,10 @@ Veuillez remplir ce formulaire pour passer votre commande. Les poids des produit
     orderDetails += "%0D%0A💰 Montant total estimatif : " + grandTotal.toFixed(2).replace('.', ',') + " €";
             let recipient = "huitroccitane@gmail.com"; // Remplace par ton email
             let subject = "Nouvelle commande - " + name;
-            let mailtoLink = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(orderDetails)}`;
+           let mailtoLink = `mailto:${recipient}?subject=${subject}&body=${orderDetails}`;
+
+window.location.href = mailtoLink;
+
 
 
             window.location.href = mailtoLink;
