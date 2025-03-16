@@ -306,7 +306,8 @@ Veuillez remplir ce formulaire pour passer votre commande. Les poids des produit
     orderDetails += "%0D%0A💰 Montant total estimatif : " + grandTotal.toFixed(2).replace('.', ',') + " €";
             let recipient = "huitroccitane@gmail.com"; // Remplace par ton email
             let subject = "Nouvelle commande - " + name;
-            let mailtoLink = `mailto:${recipient}?subject=${subject}&body=${orderDetails}`;
+            let mailtoLink = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(orderDetails)}`;
+
 
             window.location.href = mailtoLink;
              
