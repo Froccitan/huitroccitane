@@ -36,15 +36,38 @@
 }
 
         }
+  button {
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #005f8a;
+}
+      
     </style>
 </head>
 <body>
     <h2>Huitre Occitane</h2>
     <p class="subtitle">Les saveurs marines à domicile</p>
     
-    <label for="info-message">Informations :</label>
+    <label for="info-message">Informations pour remplir le formulaire de commande :</label>
     <textarea id="info-message" rows="4" cols="50" disabled>
-Veuillez remplir ce formulaire pour passer votre commande. Les poids des produits peuvent légèrement varier lors de la préparation. Nous vous contacterons pour confirmation.
+Renseignez nom et numero de telephone
+Introduisez les quantités pour chaque produit desiré
+Le prix s'affiche dans la colonne Total
+Le montant total est au bas du formulaire. Il est estimatif car les poids des produits au kg peuvent varier légerement par rapport à ceux commandés
+Votre commande terminée, cliquez sur Envoyer par sms et envoyez le message qui s'ouvre directement. Cela vous permet de conserver une trace de votre commande
+Si vous utilisez Whatsapp, procedez comme pour Sms
+En dernier lieu cliquez Passer la commande et envoyez le mail pré-rempli
+3 envois = 3 fois plus de probabilité d'une transmission reussie
+En cas de non reception de la confirmation de votre commande passé un délai de 12h, contactez nous au 0782314345
+Le paiement se fera à la livraison. Carte bancaire accepté.
     </textarea>
     
     <label for="customer-name">Nom :</label>
@@ -252,6 +275,8 @@ Veuillez remplir ce formulaire pour passer votre commande. Les poids des produit
     </div>
 
     <h3>Total estimatif: <span id="grand-total">0.00</span> €</h3>
+
+
 
    <script>
     function calculateTotal() {
@@ -470,6 +495,13 @@ function sendOrderByWhatsApp() {
 <button onclick="sendOrderBySMS()">📱 Envoyer par SMS</button>
 <button onclick="sendOrderByWhatsApp()">💬 Envoyer via WhatsApp</button>
 <button onclick="sendOrder()">📩 Passer la commande</button>
+<!-- Ajout du texte explicatif -->
+<p style="font-size: 16px; color: #333; margin-top: 10px;">
+    Si notre service vous satisfait, merci de partager ce formulaire avec vos proches et amis susceptibles d'être intéressés.
+</p>
+
+<!-- Bouton de partage -->
+<button onclick="window.location.href='partage.html'">📤 Je partage</button>
 
 <input type="password" id="admin-code" placeholder="">
 <button onclick="checkAdmin()"></button>
