@@ -31,6 +31,10 @@
                 font-size: 14px;
                 padding: 8px;
             }
+			td.total {
+    text-align: right;
+}
+
         }
     </style>
 </head>
@@ -249,33 +253,95 @@ Veuillez remplir ce formulaire pour passer votre commande. Les poids des produit
 
     <h3>Total estimatif: <span id="grand-total">0.00</span> €</h3>
 
-    <script>
-        function calculateTotal() {
-            let grandTotal = 0;
-            document.querySelectorAll("#product-list tr:not(.category), #unit-product-list tr:not(.category)").forEach(row => {
-                let price = parseFloat(row.querySelector(".price").textContent.replace(',', '.'));
-                let quantity = parseFloat(row.querySelector(".quantity").value) || 0;
-                let total = price * quantity;
-                row.querySelector(".total").textContent = total.toFixed(2).replace('.', ',');
-                grandTotal += total;
-            });
-            document.getElementById("grand-total").textContent = grandTotal.toFixed(2).replace('.', ',');
-        }
-    </script>
-
-    <button onclick="sendOrder()">Passer la commande</button>
-
-    <script>
-        function sendOrder() {
-    let name = document.getElementById("customer-name").value.trim();
-    let phone = document.getElementById("customer-phone").value.trim();
-    let orderDetails = "Commande de : " + name + "%0D%0A";
-    orderDetails += "Téléphone : " + phone + "%0D%0A%0D%0A";
-
+   <script>
+    function calculateTotal() {
     let grandTotal = 0;
 
-    // Produits au kilo
-    orderDetails += "🛒 Produits vendus au kilo : %0D%0A";
+    // 🔹 Produits au kilo
+    document.querySelectorAll("#product-list tr:not(.category)").forEach(row => {
+        let price = parseFloat(row.cells[1].textContent.trim().replace(',', '.'));
+        let quantity = parseFloat(row.cells[2].querySelector("input").value) || 0;
+        let total = price * quantity;
+
+        row.cells[3].textContent = total.toFixed(2).replace('.', ',');
+        grandTotal += total;
+    });
+
+    // 🔹 Produits à l'unité (sans "kg")
+    document.querySelectorAll("#unit-product-list tr:not(.category)").forEach(row => {
+        let price = parseFloat(row.cells[1].textContent.trim().replace(',', '.'));
+        let quantity = parseInt(row.cells[2].querySelector("input").value) || 0;
+        let total = price * quantity;
+
+        row.cells[3].textContent = total.toFixed(2).replace('.', ',');
+        grandTotal += total;
+    });
+
+    // 🔹 Mise à jour du total général
+    document.getElementById("grand-total").textContent = grandTotal.toFixed(2).replace('.', ',');
+}
+
+    function sendOrder() {
+        let name = document.getElementById("customer-name").value.trim();
+        let phone = document.getElementById("customer-phone").value.trim();
+        let orderDetails = "Commande de : " + name + "%0D%0A";
+        orderDetails += "Téléphone : " + phone + "%0D%0A%0D%0A";
+
+        let grandTotal = 0;
+
+        // Produits au kilo
+        orderDetails += "🛒 Produits vendus au kilo : %0D%0A";
+        document.querySelectorAll("#product-list tr:not(.category)").forEach(row => {
+            let product = row.cells[0].textContent.trim();
+            let price = row.cells[1].textContent.trim();
+            let quantity = row.cells[2].querySelector("input").value;
+            let total = row.cells[3].textContent.trim();
+
+            if (quantity > 0) {
+                orderDetails += `${product} - ${quantity} kg à ${price} €/kg = ${total} €%0D%0A`;
+                grandTotal += parseFloat(total.replace(',', '.'));
+            }
+        });
+
+        // Produits à l'unité
+        orderDetails += "%0D%0A🛍️ Produits vendus à l'unité : %0D%0A";
+        document.querySelectorAll("#unit-product-list tr:not(.category)").forEach(row => {
+            let product = row.cells[0].textContent.trim();
+            let price = row.cells[1].textContent.trim();
+            let quantity = row.cells[2].querySelector("input").value;
+            let total = row.cells[3].textContent.trim();
+
+            if (quantity > 0) {
+                orderDetails += `${product} - ${quantity} unités à ${price} €/unité = ${total} €%0D%0A`;
+                grandTotal += parseFloat(total.replace(',', '.'));
+            }
+        });
+
+        // Ajout du total estimatif
+        orderDetails += "%0D%0A💰 Montant total estimatif : " + grandTotal.toFixed(2).replace('.', ',') + " €";
+        let recipient = "huitroccitane@gmail.com"; // Remplace par ton email
+        let subject = "Nouvelle commande - " + name;
+        let mailtoLink = `mailto:${recipient}?subject=${subject}&body=${orderDetails}`;
+
+        // Suppression de la double ligne window.location.href
+        window.location.href = mailtoLink;
+
+        // Réinitialisation du formulaire après envoi
+        document.querySelectorAll(".quantity").forEach(input => input.value = "");
+        calculateTotal();
+    }
+
+    function sendOrderBySMS() {
+    let phoneNumber = "33782314345"; // 🔹 Remplace par TON numéro de réception des commandes
+
+    let name = document.getElementById("customer-name").value.trim();
+    let clientPhone = document.getElementById("customer-phone").value.trim();
+    let grandTotal = 0;
+
+    let orderDetails = `Commande de ${name} 📞 ${clientPhone} :\n\n`;
+
+    // 🔹 Produits au kilo (ajoute "kg")
+    orderDetails += "🛒 Produits vendus au kilo :\n";
     document.querySelectorAll("#product-list tr:not(.category)").forEach(row => {
         let product = row.cells[0].textContent.trim();
         let price = row.cells[1].textContent.trim();
@@ -283,13 +349,13 @@ Veuillez remplir ce formulaire pour passer votre commande. Les poids des produit
         let total = row.cells[3].textContent.trim();
 
         if (quantity > 0) {
-            orderDetails += `${product} - ${quantity} kg à ${price} €/kg = ${total} €%0D%0A`;
+            orderDetails += `${product} - ${quantity} kg à ${price}€ = ${total}€\n`;
             grandTotal += parseFloat(total.replace(',', '.'));
         }
     });
 
-    // Produits à l'unité
-    orderDetails += "%0D%0A🛍️ Produits vendus à l'unité : %0D%0A";
+    // 🔹 Produits à l'unité (sans "kg")
+    orderDetails += "\n🛍️ Produits vendus à l'unité :\n";
     document.querySelectorAll("#unit-product-list tr:not(.category)").forEach(row => {
         let product = row.cells[0].textContent.trim();
         let price = row.cells[1].textContent.trim();
@@ -297,30 +363,61 @@ Veuillez remplir ce formulaire pour passer votre commande. Les poids des produit
         let total = row.cells[3].textContent.trim();
 
         if (quantity > 0) {
-            orderDetails += `${product} - ${quantity} unités à ${price} €/unité = ${total} €%0D%0A`;
+            orderDetails += `${product} - ${quantity} unités à ${price}€ = ${total}€\n`;
             grandTotal += parseFloat(total.replace(',', '.'));
         }
     });
 
-    // Ajout du total estimatif
-    orderDetails += "%0D%0A💰 Montant total estimatif : " + grandTotal.toFixed(2).replace('.', ',') + " €";
-            let recipient = "huitroccitane@gmail.com"; // Remplace par ton email
-            let subject = "Nouvelle commande - " + name;
-           let mailtoLink = `mailto:${recipient}?subject=${subject}&body=${orderDetails}`;
-           
+    orderDetails += `\n💰 Total estimatif : ${grandTotal.toFixed(2).replace('.', ',')} €`;
 
+    let smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(orderDetails)}`;
+    window.location.href = smsLink;
+}
 
-window.location.href = mailtoLink;
+function sendOrderByWhatsApp() {
+    let phoneNumber = "33782314345"; // 🔹 Remplace par TON numéro WhatsApp (format international, sans "+")
 
+    let name = document.getElementById("customer-name").value.trim();
+    let clientPhone = document.getElementById("customer-phone").value.trim();
+    let grandTotal = 0;
 
+    let orderDetails = `Commande de ${name} 📞 ${clientPhone} :\n\n`;
 
-            window.location.href = mailtoLink;
-             
-              document.querySelectorAll(".quantity, .unit-quantity").forEach(input => input.value = "");
-    calculateTotal();
+    // 🔹 Produits au kilo (ajoute "kg")
+    orderDetails += "🛒 Produits vendus au kilo :\n";
+    document.querySelectorAll("#product-list tr:not(.category)").forEach(row => {
+        let product = row.cells[0].textContent.trim();
+        let price = row.cells[1].textContent.trim();
+        let quantity = row.cells[2].querySelector("input").value;
+        let total = row.cells[3].textContent.trim();
+
+        if (quantity > 0) {
+            orderDetails += `${product} - ${quantity} kg à ${price}€ = ${total}€\n`;
+            grandTotal += parseFloat(total.replace(',', '.'));
         }
-    </script>
-    <script>
+    });
+
+    // 🔹 Produits à l'unité (sans "kg")
+    orderDetails += "\n🛍️ Produits vendus à l'unité :\n";
+    document.querySelectorAll("#unit-product-list tr:not(.category)").forEach(row => {
+        let product = row.cells[0].textContent.trim();
+        let price = row.cells[1].textContent.trim();
+        let quantity = row.cells[2].querySelector("input").value;
+        let total = row.cells[3].textContent.trim();
+
+        if (quantity > 0) {
+            orderDetails += `${product} - ${quantity} unités à ${price}€ = ${total}€\n`;
+            grandTotal += parseFloat(total.replace(',', '.'));
+        }
+    });
+
+    orderDetails += `\n💰 Total estimatif : ${grandTotal.toFixed(2).replace('.', ',')} €`;
+
+    let whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(orderDetails)}`;
+    window.open(whatsappLink, "_blank");
+}
+
+
     function toggleProduct(productId) {
         let row = document.querySelector(`tr[data-id="${productId}"]`);
         if (row) {
@@ -329,21 +426,29 @@ window.location.href = mailtoLink;
     }
 
     function showAdminControls() {
-        let adminPanel = document.getElementById("admin-controls");
-        adminPanel.style.display = "block"; 
+        document.getElementById("admin-controls").style.display = "block"; 
+    }
+
+    function hideAdminControls() {
+        document.getElementById("admin-controls").style.display = "none";
+    }
+
+    function checkAdmin() {
+        let code = document.getElementById("admin-code").value;
+        if (code === "6666") { 
+            showAdminControls();
+        } else {
+            alert("Code incorrect !");
+        }
     }
 </script>
+
 <script>
     function hideAdminControls() {
         let adminPanel = document.getElementById("admin-controls");
         adminPanel.style.display = "none";
     }
 </script>
-
-
-</body>
-</html>
-
 <div id="admin-controls" style="display: none;">
     <h3>⚙️ Administration</h3>
     <button onclick="toggleProduct('saumon entier')">Saumon entier</button>
@@ -360,17 +465,22 @@ window.location.href = mailtoLink;
     <button onclick="hideAdminControls()">Fermer</button>
 
 </div>
-<input type="password" id="admin-code" placeholder="Code admin">
-<button onclick="checkAdmin()">Valider</button>
 
-<script>
-    function checkAdmin() {
-        let code = document.getElementById("admin-code").value;
-        if (code === "6666") { // Remplace "1234" par un vrai mot de passe secret
-            showAdminControls();
-        } else {
-            alert("Code incorrect !");
-        }
-    }
-</script>
-  
+
+<button onclick="sendOrderBySMS()">📱 Envoyer par SMS</button>
+<button onclick="sendOrderByWhatsApp()">💬 Envoyer via WhatsApp</button>
+<button onclick="sendOrder()">📩 Passer la commande</button>
+
+<input type="password" id="admin-code" placeholder="">
+<button onclick="checkAdmin()"></button>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
