@@ -1,1 +1,97 @@
-Page partage
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partager le formulaire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        h2 {
+            color: #0077b6;
+        }
+        .share-buttons {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+            display: block;
+            width: 80%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        button:hover {
+            background-color: #005f8a;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>📤 Partager le formulaire</h2>
+    <p>Envoyez ce formulaire à vos proches et amis en un clic !</p>
+
+    <div class="share-buttons">
+        <!-- Bouton WhatsApp -->
+        <button onclick="shareOnWhatsApp()">📲 Partager sur WhatsApp</button>
+
+        <!-- Bouton Facebook -->
+        <button onclick="shareOnFacebook()">📘 Partager sur Facebook</button>
+
+        <!-- Bouton Twitter -->
+        <button onclick="shareOnTwitter()">🐦 Partager sur Twitter</button>
+
+        <!-- Bouton Email -->
+        <button onclick="shareByEmail()">📧 Partager par Email</button>
+
+        <!-- Bouton SMS -->
+        <button onclick="shareBySMS()">📩 Partager par SMS</button>
+    </div>
+
+    <script>
+        // 🔹 Lien du formulaire à partager (remplace par ton lien réel)
+        let formLink = "https://froccitan.github.io/huitroccitane/";
+
+        function shareOnWhatsApp() {
+            let message = "Bonjour ! Voici un excellent service de livraison à domicile que je recommande : " + formLink;
+            let whatsappLink = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappLink, "_blank");
+        }
+
+        function shareOnFacebook() {
+            let facebookLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(formLink)}`;
+            window.open(facebookLink, "_blank");
+        }
+
+        function shareOnTwitter() {
+            let message = "Découvrez ce service de commande en ligne : " + formLink;
+            let twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+            window.open(twitterLink, "_blank");
+        }
+
+        function shareByEmail() {
+            let subject = "Un service de commande en ligne à découvrir";
+            let body = "Bonjour,\n\nJe voulais vous recommander ce service de commande en ligne : " + formLink;
+            let mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+        }
+
+        function shareBySMS() {
+            let message = "Découvrez ce service de commande en ligne : " + formLink;
+            let smsLink = `sms:?body=${encodeURIComponent(message)}`;
+            window.location.href = smsLink;
+        }
+    </script>
+
+</body>
+</html>
