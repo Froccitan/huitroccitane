@@ -74,20 +74,20 @@
         }
 
         function shareOnTwitter() {
-            let message = "Découvrez ce service de commande en ligne : " + formLink;
+            let message = "Voici un excellent service de livraison à domicile que je recommande : " + formLink;
             let twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
             window.open(twitterLink, "_blank");
         }
 
         function shareByEmail() {
-            let subject = "Un service de commande en ligne à découvrir";
+            let subject = "Voici un excellent service de livraison à domicile que je recommande";
             let body = "Bonjour,\n\nJe voulais vous recommander ce service de commande en ligne : " + formLink;
             let mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.location.href = mailtoLink;
         }
 
         function shareBySMS() {
-            let message = "Découvrez ce service de commande en ligne : " + formLink;
+            let message = "Voici un excellent service de livraison à domicile que je recommande : " + formLink;
             let smsLink = `sms:?body=${encodeURIComponent(message)}`;
             window.location.href = smsLink;
         }
