@@ -306,76 +306,55 @@ Le paiement se fera à la livraison. Carte bancaire accepté.
     document.getElementById("grand-total").textContent = grandTotal.toFixed(2).replace('.', ',');
 }
 
-   function sendOrder() {
-    let name = document.getElementById("customer-name").value.trim();
-    let phone = document.getElementById("customer-phone").value.trim();
-    let grandTotal = document.getElementById("grand-total").textContent.trim(); // 🔹 Récupère le total estimatif
+    function sendOrder() {
+        let name = document.getElementById("customer-name").value.trim();
+        let phone = document.getElementById("customer-phone").value.trim();
+        let orderDetails = "Commande de : " + name + "%0D%0A";
+        orderDetails += "Téléphone : " + phone + "%0D%0A%0D%0A";
 
-    let orderDetails = `Commande de : ${name}\nTéléphone : ${phone}\n\n`;
+        let grandTotal = 0;
 
-    let orderData = {
-        name: name,
-        phone: phone,
-        grandTotal: grandTotal,
-        products: []
-    };
+        // Produits au kilo
+        orderDetails += "🛒 Produits vendus au kilo : %0D%0A";
+        document.querySelectorAll("#product-list tr:not(.category)").forEach(row => {
+            let product = row.cells[0].textContent.trim();
+            let price = row.cells[1].textContent.trim();
+            let quantity = row.cells[2].querySelector("input").value;
+            let total = row.cells[3].textContent.trim();
 
-    // 🔹 Produits au kilo
-    document.querySelectorAll("#product-list tr:not(.category)").forEach(row => {
-        let product = row.cells[0].textContent.trim();
-        let price = parseFloat(row.cells[1].textContent.trim().replace(',', '.')) || 0;
-        let quantity = parseFloat(row.cells[2].querySelector("input").value) || 0;
-        let total = parseFloat(row.cells[5].textContent.trim().replace(',', '.')) || 0; // 🔹 Colonne Total
+            if (quantity > 0) {
+                orderDetails += `${product} - ${quantity} kg à ${price} €/kg = ${total} €%0D%0A`;
+                grandTotal += parseFloat(total.replace(',', '.'));
+            }
+        });
 
-        if (quantity > 0) {
-            orderData.products.push({ product, quantity, price, total });
-            orderDetails += `${product} - ${quantity} kg à ${price}€/kg = ${total}€\n`;
-        }
-    });
+        // Produits à l'unité
+        orderDetails += "%0D%0A🛍️ Produits vendus à l'unité : %0D%0A";
+        document.querySelectorAll("#unit-product-list tr:not(.category)").forEach(row => {
+            let product = row.cells[0].textContent.trim();
+            let price = row.cells[1].textContent.trim();
+            let quantity = row.cells[2].querySelector("input").value;
+            let total = row.cells[3].textContent.trim();
 
-    // 🔹 Produits à l'unité
-    document.querySelectorAll("#unit-product-list tr:not(.category)").forEach(row => {
-        let product = row.cells[0].textContent.trim();
-        let price = parseFloat(row.cells[1].textContent.trim().replace(',', '.')) || 0;
-        let quantity = parseInt(row.cells[2].querySelector("input").value) || 0;
-        let total = parseFloat(row.cells[5].textContent.trim().replace(',', '.')) || 0;
+            if (quantity > 0) {
+                orderDetails += `${product} - ${quantity} unités à ${price} €/unité = ${total} €%0D%0A`;
+                grandTotal += parseFloat(total.replace(',', '.'));
+            }
+        });
 
-        if (quantity > 0) {
-            orderData.products.push({ product, quantity, price, total });
-            orderDetails += `${product} - ${quantity} unités à ${price}€/unité = ${total}€\n`;
-        }
-    });
+        // Ajout du total estimatif
+        orderDetails += "%0D%0A💰 Montant total estimatif : " + grandTotal.toFixed(2).replace('.', ',') + " €";
+        let recipient = "huitroccitane@gmail.com"; // Remplace par ton email
+        let subject = "Nouvelle commande - " + name;
+        let mailtoLink = `mailto:${recipient}?subject=${subject}&body=${orderDetails}`;
 
-    orderDetails += `\n💰 Total estimatif : ${grandTotal} €\n`;
+        // Suppression de la double ligne window.location.href
+        window.location.href = mailtoLink;
 
-    // 🔹 Envoi vers Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbxInfVmmS2zvthBHqAfpVdr-NbJfpdONo7FufwwrnXUe7Hxe3gJFd9w6H72D14U6Ixqxw/exec", {  // 🔹 Remplace par l'URL de ton script Apps Script
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData)
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log("Commande enregistrée dans Google Sheets :", data);
-        alert("Commande envoyée avec succès !");
-    })
-    .catch(error => {
-        console.error("Erreur lors de l'envoi vers Google Sheets :", error);
-    });
-
-    // 🔹 Envoi par email
-    let recipient = "huitroccitane@gmail.com"; // Remplace par ton adresse e-mail
-    let subject = `Nouvelle commande - ${name}`;
-    let mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(orderDetails)}`;
-
-    // 🔹 Ouvre l'email
-    window.location.href = mailtoLink;
-
-    // 🔹 Réinitialisation du formulaire après envoi
-    document.querySelectorAll(".quantity").forEach(input => input.value = "");
-    calculateTotal();
-}
-
+        // Réinitialisation du formulaire après envoi
+        document.querySelectorAll(".quantity").forEach(input => input.value = "");
+        calculateTotal();
+    }
 
     function sendOrderBySMS() {
     let phoneNumber = "33782314345"; // 🔹 Remplace par TON numéro de réception des commandes
