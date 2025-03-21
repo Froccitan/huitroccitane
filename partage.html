@@ -34,6 +34,12 @@
         button:hover {
             background-color: #005f8a;
         }
+        #copy-message {
+            color: green;
+            font-size: 16px;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -42,30 +48,19 @@
     <p>Envoyez ce formulaire à vos proches et amis en un clic !</p>
 
     <div class="share-buttons">
-        <!-- Bouton WhatsApp -->
+        <!-- Boutons de partage -->
         <button onclick="shareOnWhatsApp()">📲 Partager sur WhatsApp</button>
-
-        <!-- Bouton Facebook -->
         <button onclick="shareOnFacebook()">📘 Partager sur Facebook</button>
-
-        <!-- Bouton Twitter -->
         <button onclick="shareOnTwitter()">🐦 Partager sur Twitter</button>
-
-        <!-- Bouton Email -->
         <button onclick="shareByEmail()">📧 Partager par Email</button>
-
-        <!-- Bouton SMS -->
         <button onclick="shareBySMS()">📩 Partager par SMS</button>
-		
-		<!-- Bouton Instagram avec copie automatique -->
-<button onclick="shareOnInstagram()">📸 Partager sur Instagram</button>
+        <button onclick="shareOnInstagram()">📸 Partager sur Instagram</button>
 
-<!-- Message après copie -->
-<p id="copy-message" style="color: green; display: none; font-size: 16px; margin-top: 10px;">
-    📋 Lien copié ! <br> 📲 Ouvrez Instagram et collez-le dans une story ou un message privé.
-</p>
+        <!-- Message après copie Instagram -->
+        <p id="copy-message">📋 Lien copié !<br> 📲 Ouvrez Instagram et collez-le dans une story ou un message privé.</p>
 
-
+        <!-- Bouton Retour au formulaire -->
+        <button onclick="goBack()">⬅ Retour au formulaire</button>
     </div>
 
     <script>
@@ -101,28 +96,27 @@
             let smsLink = `sms:?body=${encodeURIComponent(message)}`;
             window.location.href = smsLink;
         }
-		
-	function shareOnInstagram() {
-    // Création d'un élément temporaire pour copier le texte
-    let tempInput = document.createElement("input");
-    tempInput.value = formLink;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
 
-    // Afficher un message d'instruction
-    let copyMessage = document.getElementById("copy-message");
-    copyMessage.style.display = "block";
+        function shareOnInstagram() {
+            let tempInput = document.createElement("input");
+            tempInput.value = formLink;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
 
-    // Masquer le message après 5 secondes
-    setTimeout(() => {
-        copyMessage.style.display = "none";
-    }, 5000);
-}
+            let copyMessage = document.getElementById("copy-message");
+            copyMessage.style.display = "block";
 
+            setTimeout(() => {
+                copyMessage.style.display = "none";
+            }, 5000);
+        }
 
-
+        // 🔹 Fonction pour revenir au formulaire
+        function goBack() {
+            window.location.href = "index.html"; // 🔹 Remplace par le bon lien vers ton formulaire
+        }
     </script>
 
 </body>
