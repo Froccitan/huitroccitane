@@ -56,6 +56,16 @@
 
         <!-- Bouton SMS -->
         <button onclick="shareBySMS()">📩 Partager par SMS</button>
+		
+		<!-- Bouton Instagram avec copie automatique -->
+<button onclick="shareOnInstagram()">📸 Partager sur Instagram</button>
+
+<!-- Message après copie -->
+<p id="copy-message" style="color: green; display: none; font-size: 16px; margin-top: 10px;">
+    📋 Lien copié ! <br> 📲 Ouvrez Instagram et collez-le dans une story ou un message privé.
+</p>
+
+
     </div>
 
     <script>
@@ -91,6 +101,28 @@
             let smsLink = `sms:?body=${encodeURIComponent(message)}`;
             window.location.href = smsLink;
         }
+		
+	function shareOnInstagram() {
+    // Création d'un élément temporaire pour copier le texte
+    let tempInput = document.createElement("input");
+    tempInput.value = formLink;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+
+    // Afficher un message d'instruction
+    let copyMessage = document.getElementById("copy-message");
+    copyMessage.style.display = "block";
+
+    // Masquer le message après 5 secondes
+    setTimeout(() => {
+        copyMessage.style.display = "none";
+    }, 5000);
+}
+
+
+
     </script>
 
 </body>
